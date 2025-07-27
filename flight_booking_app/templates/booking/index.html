@@ -20,6 +20,10 @@
     <div>
         <img src="{% static 'images/plane.jpg' %}" alt="plane" >
         <h1>Discover and Book Your Perfect Flight!</h1>
+            <form method="GET" action="{% url 'booking:results' %}">
+                {{ form.as_p }}
+                <button type="submit">Search Flights</button>
+            </form>
     </div>
 
 </body>
