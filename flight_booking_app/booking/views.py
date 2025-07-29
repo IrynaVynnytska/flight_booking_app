@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse 
+from datetime import timedelta
 from booking.forms import FlightForm
 from booking.models import Flight
 
@@ -37,4 +38,15 @@ def results(request):
 
         flights = Flight.objects.filter(**filters)
 
-    return render(request, 'booking/results.html', {'form': form, 'flights': flights})
+        note = None
+        if not flights.exists():
+            flights = Flight.objects.filter(
+                departure_airport=departure,
+                arrival_airport=arrival,
+                departure_date__range=[departure_date, departure_date + timedelta(days=5)]
+            )
+            if flights.exists():
+                note = "No flights on your exact date. Showing flights up to 5 days later."
+
+
+    return render(request, 'booking/results.html', {'form': form, 'flights': flights, 'note': note})
