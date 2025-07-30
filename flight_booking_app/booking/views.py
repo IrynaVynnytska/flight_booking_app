@@ -1,16 +1,43 @@
-from django.shortcuts import render
-from django.http import HttpResponse 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from datetime import timedelta
 from booking.forms import FlightForm, PassengerProfileForm, PassengerForm
 from booking.models import Flight
 
-# Create your views here.
+
 def index(request):
     form = FlightForm()
     return render(request, 'booking/index.html', {"form": form})
 
-def login(request):
-    return HttpResponse("Login page")
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            if user.is_active:
+                login(request, user)
+                return redirect(reverse('booking:index'))
+            else:
+                return HttpResponse("Your account is disabled.")
+        else:
+            print(f"Invalid login details: {username}, {password}")
+            return HttpResponse("Invalid login details supplied.")
+    else:
+        return render(request, 'booking/login.html')
+
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect(reverse('booking:index'))
+
 
 def register(request):
     registered = False
@@ -38,11 +65,15 @@ def register(request):
                 'booking/register.html',
                 context = {'passenger_form': passenger_form, 'profile_form': profile_form, 'registered': registered})
 
+
+@login_required
 def my_flights(request):
-    return HttpResponse("My flights page")
+    return HttpResponse("You are logged in.")
+
 
 def faq(request):
     return render(request, 'booking/faq.html')
+
 
 def results(request):
     form = FlightForm(request.GET or None)  # handles empty or filled GET data

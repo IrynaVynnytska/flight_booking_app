@@ -12,10 +12,15 @@
     <div id="navMain">
         EasyFlight
         <div id="navLinks">
-            <a href="{% url 'booking:faq' %}">Frequent Questions</a>
-            <a href="{% url 'booking:my_flights' %}">My Flights</a>
-            <a href="{% url 'booking:login' %}">Login</a>
-            <a href="{% url 'booking:register' %}">Sign Up</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'booking:my_flights' %}">My Flights</a>
+                <a href="{% url 'booking:logout' %}">Log out</a>
+            {% else %}
+                <a href="{% url 'booking:login' %}">Login</a>
+                <a href="{% url 'booking:register' %}">Sign Up</a>
+            {% endif %}
+                <a href="{% url 'booking:faq' %}">Frequent Questions</a>
+
         </div>
     </div>
     <div>
