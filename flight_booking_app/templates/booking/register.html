@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{%load staticfiles%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Register to Book a Flight</h1>
+    {%if registered%}
+    <strong>Thank you for registering!</strong>
+    <a href="{% url 'booking:index' %}">Return to homepage.</a> <br />
+    {% else %}
+    <form id="passenger_form" method="post" action="{% url 'booking:register' %}"
+        enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ passenger_form.as_p }}
+        {{ profile_form.as_p }}
+
+        <input type="submit" name="submit" value="Register">
+    </form>
+    {% endif %}
+</body>
+</html>

@@ -1,5 +1,7 @@
 from django import forms
-from booking.models import Flight
+from django.contrib.auth.models import User
+from booking.models import Flight, Passenger
+
 
 class FlightForm(forms.Form):
     departure_airport = forms.ChoiceField()
@@ -19,3 +21,16 @@ class FlightForm(forms.Form):
 
         self.fields['departure_airport'].choices = departure_choices
         self.fields['arrival_airport'].choices = arrival_choices
+
+class PassengerForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password',)
+
+class PassengerProfileForm(forms.ModelForm):
+    class Meta:
+        model = Passenger
+        fields = ('phone_number', 'passport_number',)
+

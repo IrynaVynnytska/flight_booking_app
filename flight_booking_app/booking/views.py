@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse 
 from datetime import timedelta
-from booking.forms import FlightForm
+from booking.forms import FlightForm, PassengerProfileForm, PassengerForm
 from booking.models import Flight
 
 # Create your views here.
@@ -11,6 +11,32 @@ def index(request):
 
 def login(request):
     return HttpResponse("Login page")
+
+def register(request):
+    registered = False
+
+    if request.method == 'POST':
+        passenger_form = PassengerForm(request.POST)
+        profile_form = PassengerProfileForm(request.POST)
+
+        if passenger_form.is_valid() and profile_form.is_valid():
+
+            passenger = passenger_form.save()
+            passenger.set_password(passenger.password)
+            passenger.save()
+
+            profile = profile_form.save(commit=False)
+            profile.passenger = passenger
+
+        else :
+            print(passenger_form.errors, profile_form.errors)
+    else:
+        passenger_form = PassengerForm()
+        profile_form = PassengerProfileForm()
+
+    return render(request,
+                'booking/register.html',
+                context = {'passenger_form': passenger_form, 'profile_form': profile_form, 'registered': registered})
 
 def my_flights(request):
     return HttpResponse("My flights page")
