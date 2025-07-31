@@ -1,33 +1,29 @@
-<!DOCTYPE html>
-
+{% extends 'booking/base.html' %}
 {% load staticfiles %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Results</title>
-</head>
-<body>
+{% block title_block %}
+    Flight Results
+{% endblock %}
+
+{% block body_block %}
     <h1>Flight Search Results</h1>
 
-<form method="GET" action="{% url 'booking:results' %}">
-    {{ form.as_p }}
-    <button type="submit">Search Again</button>
-</form>
+    <form method="GET" action="{% url 'booking:results' %}">
+        {{ form.as_p }}
+        <button type="submit">Search Again</button>
+    </form>
 
-<hr>
+    <br>
 
-{% if flights %}
-    <ul>
-    {% for flight in flights %}
-        <li>{{ flight.flight_number }} – {{ flight.departure_airport }} → {{ flight.arrival_airport }} ({{ flight.departure_date }})</li>
-        <button id="bookBTN">Book</button>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No flights found. Try changing your search.</p>
-{% endif %}
+    {% if flights %}
+        <ul>
+            {% for flight in flights %}
+                <li>{{ flight.flight_number }} – {{ flight.departure_airport }} → {{ flight.arrival_airport }} ({{ flight.departure_date }})</li>
+                <button id="bookBTN">Book</button>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No flights found. Try changing your search.</p>
+    {% endif %}
 
-</body>
-</html>
+{% endblock %}

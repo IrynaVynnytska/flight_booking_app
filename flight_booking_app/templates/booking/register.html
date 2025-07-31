@@ -1,12 +1,7 @@
-<!DOCTYPE html>
+{% extends 'booking/base.html' %}
 {%load staticfiles%}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+
+{% block body_block %}
     <h1>Register to Book a Flight</h1>
     {%if registered%}
     <strong>Thank you for registering!</strong>
@@ -21,5 +16,4 @@
         <input type="submit" name="submit" value="Register">
     </form>
     {% endif %}
-</body>
-</html>
+{% endblock %}
