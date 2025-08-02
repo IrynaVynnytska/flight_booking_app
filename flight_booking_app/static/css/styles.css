@@ -1,0 +1,40 @@
+.hero-section {
+    background: url("../images/plane.jpg") center/cover no-repeat;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.search-box {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 80%;
+    max-width: 1000px;
+}
+
+    .why-section {
+      background-color: #cfe7ff;
+      padding: 50px 0;
+    }
+    .why-card {
+      background-color: rgba(255,255,255,0.5);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .photo-grid {
+      background-color: #f4f4f4;
+      padding: 50px 0;
+    }
+    .photo-box {
+      background: white;
+      height: 200px;
+      margin-bottom: 15px;
+    }

@@ -19,7 +19,10 @@
         <ul>
             {% for flight in flights %}
                 <li>{{ flight.flight_number }} – {{ flight.departure_airport }} → {{ flight.arrival_airport }} ({{ flight.departure_date }})</li>
-                <button id="bookBTN">Book</button>
+                <form method="POST" action="{% url 'booking:book_flight' flight.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Book</button>
+                </form>
             {% endfor %}
         </ul>
     {% else %}

@@ -1,10 +1,40 @@
 {% extends 'booking/base.html' %}
 {% load staticfiles %}
-
-{% block title_block %}
-    My Flights 
-{% endblock %}
+{% block title_block %} My Flights {% endblock %}
 
 {% block body_block %}
-    <p>Here are your flights! </p>
+<h1>My Booked Flights</h1>
+
+{% if bookings %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Flight Number</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Date</th>
+                <th>Booked On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.flight.flight_number }}</td>
+                <td>{{ booking.flight.departure_airport }}</td>
+                <td>{{ booking.flight.arrival_airport }}</td>
+                <td>{{ booking.flight.departure_date }}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>
+                    <form method="POST" action="{% url 'booking:cancel_booking' booking.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You haven’t booked any flights yet.</p>
+{% endif %}
 {% endblock %}

@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
 from django.http import HttpResponse
 from datetime import timedelta
 from booking.forms import FlightForm, PassengerProfileForm, PassengerForm
-from booking.models import Flight
+from booking.models import Flight, Booking
 
 
 def index(request):
@@ -68,7 +70,29 @@ def register(request):
 
 @login_required
 def my_flights(request):
-    return HttpResponse("You are logged in.")
+    bookings = Booking.objects.filter(passenger=request.user)
+    return render(request, 'booking/my_flights.html', {'bookings': bookings})
+
+
+@login_required
+def book_flight(request, flight_number):
+    flight = get_object_or_404(Flight, id=flight_number)
+
+    if Booking.objects.filter(passenger=request.user, flight=flight).exists():
+        messages.warning('You have already booked a flight!')
+        return redirect('booking:results')
+    
+    else:
+        Booking.objects.create(passenger=request.user, flight=flight)
+        messages.success(f'Successfully booked a flight to {flight.arrival_airport}')
+        return redirect('booking:my_flights', my_flight_name_slug=request.user.username)
+
+@login_required
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, passenger=request.user)
+    booking.delete()
+    messages.info(request, "Your booking was canceled.")
+    return redirect("booking:my_flights")
 
 
 def faq(request):
@@ -77,8 +101,8 @@ def faq(request):
 
 def results(request):
     form = FlightForm(request.GET or None)  # handles empty or filled GET data
-
     flights = None  # default: no flights yet
+    note = None
 
     if form.is_valid():
         departure = form.cleaned_data['departure_airport']
